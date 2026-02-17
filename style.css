@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    border-bottom: 1px solid #ccc;
+}
+
+.navbar nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: black;
+}
+
+.hero {
+    height: 90vh;
+    background-color: #e0e0e0; /* apenas placeholder */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+}
