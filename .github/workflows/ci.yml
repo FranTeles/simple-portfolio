@@ -1,13 +1,17 @@
-name: Simple CI
+name: CI Pipeline
 
-on: [push]
+on:
+  push:
+    branches:
+      - feature/project-setup
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Build Docker image
-        run: docker build -t simple-portfolio .
+      - name: Show files
+        run: ls
