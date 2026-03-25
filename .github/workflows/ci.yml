@@ -18,10 +18,10 @@ jobs:
         run: npm install
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: node ./node_modules/playwright/cli.js install --with-deps
 
       - name: Run automated tests
-        run: npm test
+        run: node ./node_modules/playwright/cli.js test
 
       - name: Build Docker image
         run: docker build -t simple-portfolio .
