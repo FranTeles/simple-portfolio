@@ -1,64 +1,123 @@
 const { test, expect } = require('@playwright/test');
 
-test('homepage loads', async ({ page }) => {
+test('homepage loads successfully', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('body')).toBeVisible();
 });
 
 test('page title is correct', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle('Photography Portfolio');
+  await expect(page).toHaveTitle('MountJoy Photographer | Travel and Landscape Photography in Dublin');
 });
 
-test('navigation is visible', async ({ page }) => {
+test('meta description is present', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('nav')).toBeVisible();
-
-  await expect(page.getByRole('link', { name: 'Gallery' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Contact' })).toBeVisible();
+  const description = page.locator('meta[name="description"]');
+  await expect(description).toHaveAttribute(
+    'content',
+    /MountJoy Photographer is a landscape and trips photographer in Dublin/i
+  );
 });
 
-test('hero section content is visible', async ({ page }) => {
+test('navigation and main links are visible', async ({ page }) => {
+  await page.goto('/');
+
+  const nav = page.locator('nav.nav-links');
+  await expect(page.locator('header.topbar')).toBeVisible();
+  await expect(nav).toBeVisible();
+
+  await expect(nav.getByRole('link', { name: 'Home' })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'About' })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Portfolio' })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Services' })).toBeVisible();
+  await expect(nav.getByRole('link', { name: 'Contact' })).toBeVisible();
+});
+
+test('hero section content and CTA buttons are visible', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.locator('.hero')).toBeVisible();
-  await expect(page.getByText('LANDSCAPE & TRAVEL PHOTOGRAPHY')).toBeVisible();
-  await expect(page.getByText('Through the')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'View Gallery' })).toBeVisible();
+  await expect(page.getByText('Dublin-Based Travel & Landscape Storytelling')).toBeVisible();
+  await expect(
+    page.getByRole('heading', {
+      name: /Elegant imagery for journeys, places and people who want to remember how it felt\./i
+    })
+  ).toBeVisible();
+
+  await expect(page.getByRole('link', { name: 'View Portfolio' }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Make an Inquiry' })).toBeVisible();
 });
 
-test('gallery section is displayed with images', async ({ page }) => {
+test('hero stats cards are displayed', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.locator('#gallery')).toBeVisible();
-  await expect(page.locator('#gallery h3')).toHaveText('Portfolio');
-
-  const images = page.locator('#gallery img');
-  await expect(images).toHaveCount(4);
+  const stats = page.locator('.hero-stats .stat');
+  await expect(stats).toHaveCount(4);
 });
 
-test('contact section is visible', async ({ page }) => {
+test('featured work section contains 3 cards', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.locator('#contact')).toBeVisible();
-  await expect(page.getByText('Let’s Work Together')).toBeVisible();
+  await expect(page.getByText('Featured Work')).toBeVisible();
+  await expect(page.locator('.grid-3 .card').first()).toBeVisible();
 
-  await expect(page.getByText('Email')).toBeVisible();
-  await expect(page.getByText('Instagram')).toBeVisible();
-  await expect(page.getByText('Location')).toBeVisible();
+  const featuredCards = page.locator('.section .grid-3 .card');
+  await expect(featuredCards).toHaveCount(3);
 });
 
-test('footer is visible', async ({ page }) => {
+test('services section contains 4 feature cards', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.locator('footer')).toBeVisible();
-  await expect(page.getByText('© 2026 Photography Portfolio')).toBeVisible();
+  const serviceCards = page.locator('.feature-card');
+  await expect(serviceCards).toHaveCount(4);
 });
 
-test('mobile view works correctly', async ({ page }) => {
+test('testimonials section contains 3 testimonial cards', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.getByText('Testimonials')).toBeVisible();
+
+  const testimonials = page.locator('.testimonial-card');
+  await expect(testimonials).toHaveCount(3);
+});
+
+test('instagram preview section contains 4 links', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.getByText('Instagram Preview')).toBeVisible();
+
+  const instaCards = page.locator('.insta-card');
+  await expect(instaCards).toHaveCount(4);
+});
+
+test('blog section contains 3 articles', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.getByText('Latest stories and inspiration.')).toBeVisible();
+
+  const blogCards = page.locator('.blog-card');
+  await expect(blogCards).toHaveCount(3);
+});
+
+test('download guide link exists', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.getByRole('link', { name: 'Download Guide' })).toBeVisible();
+});
+
+test('footer is visible with contact details', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.locator('footer.footer')).toBeVisible();
+  await expect(page.getByText('© 2026 MountJoy Photographer. Crafted for premium storytelling in Dublin and beyond.')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'hello@mountjoyphotographer.com' })).toBeVisible();
+});
+
+test('mobile view loads correctly', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/');
 
-  await expect(page.locator('nav')).toBeVisible();
+  await expect(page.locator('body')).toBeVisible();
+  await expect(page.locator('.mobile-toggle')).toBeVisible();
   await expect(page.locator('.hero')).toBeVisible();
 });
